@@ -39,16 +39,49 @@
       ];
       const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-      const today = new Date()
-      const currentMonth = today.getMonth()
-      const currentYear = today.getFullYear()
+      const today = new Date();
+      const currentMonth = today.getMonth();
+      const currentYear = today.getFullYear();
 
-      const currentMonthHeaderRow = document.createElement('tr')
-      const currentMonthHeaderTitle = document.createElement('th')
-      currentMonthHeaderTitle.textContent = months[currentMonth]
+      // Build Month Header
+      const currentMonthHeaderRow = document.createElement('tr');
+      const currentMonthHeaderTitle = document.createElement('th');
+      currentMonthHeaderTitle.textContent = `${months[currentMonth]} ${currentYear}`;
+      currentMonthHeaderTitle.setAttribute('colspan', 7);
 
-      currentMonthHeaderRow.appendChild(currentMonthHeaderTitle)
-      el.querySelector('thead').appendChild(currentMonthHeaderRow)
+      currentMonthHeaderRow.appendChild(currentMonthHeaderTitle);
+      el.querySelector('thead').appendChild(currentMonthHeaderRow);
+
+      // Build Body
+      const daysHeaderRow = document.createElement('tr');
+      days.forEach((day) => {
+        const daysHeaderColumnHeader = document.createElement('th');
+        daysHeaderColumnHeader.textContent = day;
+        daysHeaderRow.appendChild(daysHeaderColumnHeader);
+      });
+
+      el.querySelector('tbody').appendChild(daysHeaderRow);
+
+      const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+      const daysInMonth =
+        32 - new Date(currentMonth, currentYear, 32).getDate();
+      const weeksInMonth = Math.ceil(daysInMonth / 7);
+
+      let date = 1;
+      for (let i = 0; i < weeksInMonth; i++) {
+        const weekRow = document.createElement('tr');
+        for (let j = 0; j < 7; j++) {
+          const day = document.createElement('td');
+          if ((i == 0 && j < firstDayOfMonth) || date > daysInMonth) {
+            day.textContent = '';
+          } else {
+            day.textContent = date;
+            date++;
+          }
+          weekRow.appendChild(day);
+        }
+        el.querySelector('tbody').appendChild(weekRow);
+      }
     </script>
   </body>
 </html>
