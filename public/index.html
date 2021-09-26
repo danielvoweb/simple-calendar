@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Simple Calendar</title>
+    <meta name="description" content="A simple javascript calendar." />
+    <meta name="author" content="dan@daniel-vo.com" />
+  </head>
+  <body>
+    <div class="main">
+      <h1>Simple Calendar</h1>
+      <p>A simple javascript calendar to display class/session dates.</p>
+    </div>
+    <div class="demo">
+      <table data-calendar>
+        <thead></thead>
+        <tbody></tbody>
+        <tfoot></tfoot>
+      </table>
+    </div>
+    <script>
+      const el = document.querySelector('[data-calendar]');
+      const months = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
+      ];
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+      const today = new Date()
+      const currentMonth = today.getMonth()
+      const currentYear = today.getFullYear()
+
+      const currentMonthHeaderRow = document.createElement('tr')
+      const currentMonthHeaderTitle = document.createElement('th')
+      currentMonthHeaderTitle.textContent = months[currentMonth]
+
+      currentMonthHeaderRow.appendChild(currentMonthHeaderTitle)
+      el.querySelector('thead').appendChild(currentMonthHeaderRow)
+    </script>
+  </body>
+</html>

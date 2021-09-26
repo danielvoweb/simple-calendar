@@ -1,0 +1,22 @@
+{
+  "name": "simple-calendar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielvoweb/simple-calendar.git"
+  },
+  "author": "dan@daniel-vo.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/danielvoweb/simple-calendar/issues"
+  },
+  "homepage": "https://github.com/danielvoweb/simple-calendar#readme",
+  "devDependencies": {
+    "http-server": "^13.0.2"
+  }
+}
