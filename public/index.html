@@ -15,10 +15,17 @@
       <p>A simple javascript calendar to display class/session dates.</p>
     </div>
     <div class="demo">
-      <table data-calendar>
+      <table data-calendar class="calendar">
         <thead></thead>
         <tbody></tbody>
-        <tfoot></tfoot>
+        <tfoot>
+          <tr>
+            <td colspan="7">
+              <select data-month></select>
+              <select data-year></select>
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
     <script>
@@ -68,11 +75,14 @@
       const weeksInMonth = Math.ceil(daysInMonth / 7);
 
       let date = 1;
-      for (let i = 0; i < weeksInMonth; i++) {
+      for (let indexWeeks = 0; indexWeeks < weeksInMonth; indexWeeks++) {
         const weekRow = document.createElement('tr');
-        for (let j = 0; j < 7; j++) {
+        for (let indexDays = 0; indexDays < 7; indexDays++) {
           const day = document.createElement('td');
-          if ((i == 0 && j < firstDayOfMonth) || date > daysInMonth) {
+          if (
+            (indexWeeks == 0 && indexDays < firstDayOfMonth) ||
+            date > daysInMonth
+          ) {
             day.textContent = '';
           } else {
             day.textContent = date;
@@ -82,6 +92,22 @@
         }
         el.querySelector('tbody').appendChild(weekRow);
       }
+
+      // Build Footer Selector
+      months.forEach((month) => {
+        const monthOption = document.createElement('option');
+        monthOption.textContent = month;
+        if (months[currentMonth] == month)
+          monthOption.setAttribute('selected', 'selected');
+        el.querySelector('tfoot [data-month]').appendChild(monthOption);
+      });
+
+      const selectYears = [0, 1, 2, 3, 4, 5];
+      selectYears.forEach((year) => {
+        const yearOption = document.createElement('option');
+        yearOption.textContent = currentYear + year;
+        el.querySelector('tfoot [data-year]').appendChild(yearOption);
+      });
     </script>
   </body>
 </html>
