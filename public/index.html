@@ -53,16 +53,25 @@
       // TODO: 1 class per week on a given day for a week number of sessions
       const sessions = [
         {
-          name: 'session name',
+          name: 'session 2',
           weeks: 6,
-          startDate: new Date(2021, 8, 28)
+          startDate: new Date(2021, 8, 28, 18, 30)
+        },
+        {
+          name: 'session 2',
+          weeks: 6,
+          startDate: new Date(2021, 8, 3, 17, 30)
         }
       ];
 
       const calculateSessionDates = (session) => {
         const dates = [...Array(session.weeks)];
         return dates.map((date, index) => {
-          return new Date(new Date().setDate(session.startDate.getDate() + index * 7));
+          return new Date(
+            new Date(new Date().setHours(0, 0, 0, 0)).setDate(
+              session.startDate.getDate() + index * 7
+            )
+          ).toString();
         });
       };
 
@@ -108,7 +117,8 @@
         days,
         currentMonth,
         currentYear,
-        today
+        today,
+        sessions
       ) => {
         const body = el.querySelector('tbody');
         removeChildren(body);
@@ -127,21 +137,32 @@
           32 - new Date(currentMonth, currentYear, 32).getDate();
         const weeksInMonth = Math.ceil(daysInMonth / 7);
 
-        const isDate = (
-          selectedDate,
-          calendarDate,
-          calendarMonth,
-          calendarYear
-        ) => {
+        const isToday = (today, date, currentMonth, currentYear) => {
           return (
-            selectedDate.getDate() == date &&
-            selectedDate.getMonth() == calendarMonth &&
-            selectedDate.getFullYear() == calendarYear
+            today.getDate() == date &&
+            today.getMonth() == currentMonth &&
+            today.getFullYear() == currentYear
           );
         };
 
-        const isToday = (today, date, currentMonth, currentYear) => {
-          return isDate(today, date, currentMonth, currentYear);
+        const calculatedSessionDates = sessions.map((session) => {
+          return [...calculateSessionDates(session)];
+        });
+
+        const isSessionDate = (
+          sessionDates,
+          date,
+          currentMonth,
+          currentYear
+        ) => {
+          return sessionDates.includes(
+            new Date(currentYear, currentMonth, date, 0, 0).toString()
+          );
+        };
+
+        const sessionColors = {
+          0: 'has-background-warning',
+          1: 'has-background-info'
         };
 
         let date = 1;
@@ -149,15 +170,19 @@
           const weekRow = document.createElement('tr');
           for (let indexDays = 0; indexDays < 7; indexDays++) {
             const day = document.createElement('td');
-            if (isToday(today, date, currentMonth, currentYear))
-              day.setAttribute('class', 'has-background-primary');
-
             if (
               (indexWeeks == 0 && indexDays < firstDayOfMonth) ||
               date > daysInMonth
             ) {
               day.textContent = '';
             } else {
+              if (isToday(today, date, currentMonth, currentYear))
+                day.setAttribute('class', 'has-background-primary');
+
+              calculatedSessionDates.forEach((session, index) => {
+                if (isSessionDate(session, date, currentMonth, currentYear))
+                  day.setAttribute('class', sessionColors[index]);
+              });
               day.textContent = date;
               date++;
             }
@@ -167,7 +192,15 @@
         }
       };
 
-      renderBody(document, el, days, currentMonth, currentYear, today);
+      renderBody(
+        document,
+        el,
+        days,
+        currentMonth,
+        currentYear,
+        today,
+        sessions
+      );
 
       // Build Footer Selector
       const selectMonth = el.querySelector('tfoot [data-month]');
@@ -192,14 +225,30 @@
         const selectedMonth = e.currentTarget.selectedOptions[0].value;
         const selectedYear = selectYears.selectedOptions[0].value;
         renderHeader(el, months, selectedMonth, selectedYear);
-        renderBody(document, el, days, selectedMonth, selectedYear, today);
+        renderBody(
+          document,
+          el,
+          days,
+          selectedMonth,
+          selectedYear,
+          today,
+          sessions
+        );
       });
 
       selectYears.addEventListener('change', (e) => {
         const selectedMonth = selectMonth.selectedOptions[0].value;
         const selectedYear = e.currentTarget.selectedOptions[0].value;
         renderHeader(el, months, selectedMonth, selectedYear);
-        renderBody(document, el, days, selectedMonth, selectedYear, today);
+        renderBody(
+          document,
+          el,
+          days,
+          selectedMonth,
+          selectedYear,
+          today,
+          sessions
+        );
       });
     </script>
   </body>
