@@ -16,7 +16,11 @@
     </div>
     <div class="demo">
       <table data-calendar class="calendar">
-        <thead></thead>
+        <thead>
+          <tr>
+            <th colspan="7"></th>
+          </tr>
+        </thead>
         <tbody></tbody>
         <tfoot>
           <tr>
@@ -30,6 +34,11 @@
     </div>
     <script>
       const el = document.querySelector('[data-calendar]');
+
+      const today = new Date();
+      const currentMonth = today.getMonth();
+      const currentYear = today.getFullYear();
+
       const months = [
         'January',
         'February',
@@ -46,67 +55,91 @@
       ];
       const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-      const today = new Date();
-      const currentMonth = today.getMonth();
-      const currentYear = today.getFullYear();
+      const renderHeader = (el, months, currentMonth, currentYear) => {
+        const currentMonthHeaderTitle = el.querySelector('thead tr th');
+        currentMonthHeaderTitle.textContent = `${months[currentMonth]} ${currentYear}`;
+      };
 
-      // Build Month Header
-      const currentMonthHeaderRow = document.createElement('tr');
-      const currentMonthHeaderTitle = document.createElement('th');
-      currentMonthHeaderTitle.textContent = `${months[currentMonth]} ${currentYear}`;
-      currentMonthHeaderTitle.setAttribute('colspan', 7);
-
-      currentMonthHeaderRow.appendChild(currentMonthHeaderTitle);
-      el.querySelector('thead').appendChild(currentMonthHeaderRow);
+      renderHeader(el, months, currentMonth, currentYear);
 
       // Build Body
-      const daysHeaderRow = document.createElement('tr');
-      days.forEach((day) => {
-        const daysHeaderColumnHeader = document.createElement('th');
-        daysHeaderColumnHeader.textContent = day;
-        daysHeaderRow.appendChild(daysHeaderColumnHeader);
-      });
-
-      el.querySelector('tbody').appendChild(daysHeaderRow);
-
-      const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
-      const daysInMonth =
-        32 - new Date(currentMonth, currentYear, 32).getDate();
-      const weeksInMonth = Math.ceil(daysInMonth / 7);
-
-      let date = 1;
-      for (let indexWeeks = 0; indexWeeks < weeksInMonth; indexWeeks++) {
-        const weekRow = document.createElement('tr');
-        for (let indexDays = 0; indexDays < 7; indexDays++) {
-          const day = document.createElement('td');
-          if (
-            (indexWeeks == 0 && indexDays < firstDayOfMonth) ||
-            date > daysInMonth
-          ) {
-            day.textContent = '';
-          } else {
-            day.textContent = date;
-            date++;
-          }
-          weekRow.appendChild(day);
+      const removeChildren = (parent) => {
+        while (parent.firstChild) {
+          parent.removeChild(parent.firstChild);
         }
-        el.querySelector('tbody').appendChild(weekRow);
-      }
+      };
+
+      const renderBody = (document, el, days, currentMonth, currentYear) => {
+        const body = el.querySelector('tbody');
+        removeChildren(body);
+
+        const daysHeaderRow = document.createElement('tr');
+        days.forEach((day) => {
+          const daysHeaderColumnHeader = document.createElement('th');
+          daysHeaderColumnHeader.textContent = day;
+          daysHeaderRow.appendChild(daysHeaderColumnHeader);
+        });
+
+        body.appendChild(daysHeaderRow);
+
+        const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+        const daysInMonth =
+          32 - new Date(currentMonth, currentYear, 32).getDate();
+        const weeksInMonth = Math.ceil(daysInMonth / 7);
+
+        let date = 1;
+        for (let indexWeeks = 0; indexWeeks < weeksInMonth; indexWeeks++) {
+          const weekRow = document.createElement('tr');
+          for (let indexDays = 0; indexDays < 7; indexDays++) {
+            const day = document.createElement('td');
+            if (
+              (indexWeeks == 0 && indexDays < firstDayOfMonth) ||
+              date > daysInMonth
+            ) {
+              day.textContent = '';
+            } else {
+              day.textContent = date;
+              date++;
+            }
+            weekRow.appendChild(day);
+          }
+          el.querySelector('tbody').appendChild(weekRow);
+        }
+      };
+
+      renderBody(document, el, days, currentMonth, currentYear);
 
       // Build Footer Selector
-      months.forEach((month) => {
+      const selectMonth = el.querySelector('tfoot [data-month]');
+      months.forEach((month, index) => {
         const monthOption = document.createElement('option');
+        monthOption.setAttribute('value', index);
         monthOption.textContent = month;
         if (months[currentMonth] == month)
           monthOption.setAttribute('selected', 'selected');
-        el.querySelector('tfoot [data-month]').appendChild(monthOption);
+        selectMonth.appendChild(monthOption);
       });
 
-      const selectYears = [0, 1, 2, 3, 4, 5];
-      selectYears.forEach((year) => {
+      const selectYears = el.querySelector('tfoot [data-year]');
+      const selectableYears = [0, 1, 2, 3, 4, 5];
+      selectableYears.forEach((year) => {
         const yearOption = document.createElement('option');
         yearOption.textContent = currentYear + year;
-        el.querySelector('tfoot [data-year]').appendChild(yearOption);
+        selectYears.appendChild(yearOption);
+      });
+
+      selectMonth.addEventListener('change', (e) => {
+        const selectedMonth = e.currentTarget.selectedOptions[0].value;
+        const selectedYear = selectYears.selectedOptions[0].value;
+        renderHeader(el, months, selectedMonth, selectedYear);
+        renderBody(document, el, days, selectedMonth, selectedYear);
+      });
+
+      selectYears.addEventListener('change', (e) => {
+        const selectedMonth = selectMonth.selectedOptions[0].value;
+        const selectedYear = e.currentTarget.selectedOptions[0].value;
+        renderHeader(el, months, selectedMonth, selectedYear);
+        renderBody(document, el, days, selectedMonth, selectedYear);
       });
     </script>
   </body>
