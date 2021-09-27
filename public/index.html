@@ -8,10 +8,23 @@
     <title>Simple Calendar</title>
     <meta name="description" content="A simple javascript calendar." />
     <meta name="author" content="dan@daniel-vo.com" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"
+    />
+    <style>
+      .calendar {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        text-align: center;
+      }
+    </style>
   </head>
   <body>
-    <div class="main">
-      <h1>Simple Calendar</h1>
+    <div class="content">
+      <h1 class="title">Simple Calendar</h1>
       <p>A simple javascript calendar to display class/session dates.</p>
     </div>
     <div class="demo">
@@ -25,14 +38,34 @@
         <tfoot>
           <tr>
             <td colspan="7">
-              <select data-month></select>
-              <select data-year></select>
+              <div class="select">
+                <select data-month></select>
+              </div>
+              <div class="select">
+                <select data-year></select>
+              </div>
             </td>
           </tr>
         </tfoot>
       </table>
     </div>
     <script>
+      // TODO: 1 class per week on a given day for a week number of sessions
+      const sessions = [
+        {
+          name: 'session name',
+          weeks: 6,
+          startDate: new Date(2021, 8, 28)
+        }
+      ];
+
+      const calculateSessionDates = (session) => {
+        const dates = [...Array(session.weeks)];
+        return dates.map((date, index) => {
+          return new Date(new Date().setDate(session.startDate.getDate() + index * 7));
+        });
+      };
+
       const el = document.querySelector('[data-calendar]');
 
       const today = new Date();
@@ -69,7 +102,14 @@
         }
       };
 
-      const renderBody = (document, el, days, currentMonth, currentYear) => {
+      const renderBody = (
+        document,
+        el,
+        days,
+        currentMonth,
+        currentYear,
+        today
+      ) => {
         const body = el.querySelector('tbody');
         removeChildren(body);
 
@@ -87,11 +127,31 @@
           32 - new Date(currentMonth, currentYear, 32).getDate();
         const weeksInMonth = Math.ceil(daysInMonth / 7);
 
+        const isDate = (
+          selectedDate,
+          calendarDate,
+          calendarMonth,
+          calendarYear
+        ) => {
+          return (
+            selectedDate.getDate() == date &&
+            selectedDate.getMonth() == calendarMonth &&
+            selectedDate.getFullYear() == calendarYear
+          );
+        };
+
+        const isToday = (today, date, currentMonth, currentYear) => {
+          return isDate(today, date, currentMonth, currentYear);
+        };
+
         let date = 1;
         for (let indexWeeks = 0; indexWeeks < weeksInMonth; indexWeeks++) {
           const weekRow = document.createElement('tr');
           for (let indexDays = 0; indexDays < 7; indexDays++) {
             const day = document.createElement('td');
+            if (isToday(today, date, currentMonth, currentYear))
+              day.setAttribute('class', 'has-background-primary');
+
             if (
               (indexWeeks == 0 && indexDays < firstDayOfMonth) ||
               date > daysInMonth
@@ -107,7 +167,7 @@
         }
       };
 
-      renderBody(document, el, days, currentMonth, currentYear);
+      renderBody(document, el, days, currentMonth, currentYear, today);
 
       // Build Footer Selector
       const selectMonth = el.querySelector('tfoot [data-month]');
@@ -132,14 +192,14 @@
         const selectedMonth = e.currentTarget.selectedOptions[0].value;
         const selectedYear = selectYears.selectedOptions[0].value;
         renderHeader(el, months, selectedMonth, selectedYear);
-        renderBody(document, el, days, selectedMonth, selectedYear);
+        renderBody(document, el, days, selectedMonth, selectedYear, today);
       });
 
       selectYears.addEventListener('change', (e) => {
         const selectedMonth = selectMonth.selectedOptions[0].value;
         const selectedYear = e.currentTarget.selectedOptions[0].value;
         renderHeader(el, months, selectedMonth, selectedYear);
-        renderBody(document, el, days, selectedMonth, selectedYear);
+        renderBody(document, el, days, selectedMonth, selectedYear, today);
       });
     </script>
   </body>
