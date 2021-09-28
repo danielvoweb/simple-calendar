@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx http-server"
+    "start": "npx http-server",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/danielvoweb/simple-calendar#readme",
   "devDependencies": {
-    "http-server": "^13.0.2"
+    "http-server": "^13.0.2",
+    "jest": "^27.2.3"
   }
 }
