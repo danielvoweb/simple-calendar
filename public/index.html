@@ -181,7 +181,7 @@
 
               calculatedSessionDates.forEach((session, index) => {
                 if (isSessionDate(session, date, currentMonth, currentYear))
-                  day.setAttribute('class', sessionColors[index]);
+                  addClassName(day, sessionColors[index]);
               });
               day.textContent = date;
               date++;
@@ -191,6 +191,15 @@
           el.querySelector('tbody').appendChild(weekRow);
         }
       };
+
+      function addClassName(el, newClassName) {
+        if (!el.hasAttribute('class')) {
+          el.setAttribute('class', newClassName);
+          return;
+        }
+        const classNames = [el.getAttribute('class'), newClassName].join(' ');
+        el.setAttribute('class', classNames);
+      }
 
       renderBody(
         document,
