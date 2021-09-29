@@ -8,6 +8,10 @@
     <title>Simple Calendar</title>
     <meta name="description" content="A simple javascript calendar." />
     <meta name="author" content="dan@daniel-vo.com" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"
@@ -53,15 +57,15 @@
       // TODO: 1 class per week on a given day for a week number of sessions
       const sessions = [
         {
-          name: 'session 2',
+          name: "session 2",
           weeks: 6,
-          startDate: new Date(2021, 8, 28, 18, 30)
+          startDate: new Date(2021, 8, 28, 18, 30),
         },
         {
-          name: 'session 2',
+          name: "session 2",
           weeks: 6,
-          startDate: new Date(2021, 8, 3, 17, 30)
-        }
+          startDate: new Date(2021, 8, 3, 17, 30),
+        },
       ];
 
       const calculateSessionDates = (session) => {
@@ -75,30 +79,30 @@
         });
       };
 
-      const el = document.querySelector('[data-calendar]');
+      const el = document.querySelector("[data-calendar]");
 
       const today = new Date();
       const currentMonth = today.getMonth();
       const currentYear = today.getFullYear();
 
       const months = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
       ];
-      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
       const renderHeader = (el, months, currentMonth, currentYear) => {
-        const currentMonthHeaderTitle = el.querySelector('thead tr th');
+        const currentMonthHeaderTitle = el.querySelector("thead tr th");
         currentMonthHeaderTitle.textContent = `${months[currentMonth]} ${currentYear}`;
       };
 
@@ -120,12 +124,12 @@
         today,
         sessions
       ) => {
-        const body = el.querySelector('tbody');
+        const body = el.querySelector("tbody");
         removeChildren(body);
 
-        const daysHeaderRow = document.createElement('tr');
+        const daysHeaderRow = document.createElement("tr");
         days.forEach((day) => {
-          const daysHeaderColumnHeader = document.createElement('th');
+          const daysHeaderColumnHeader = document.createElement("th");
           daysHeaderColumnHeader.textContent = day;
           daysHeaderRow.appendChild(daysHeaderColumnHeader);
         });
@@ -161,23 +165,23 @@
         };
 
         const sessionColors = {
-          0: 'has-background-warning',
-          1: 'has-background-info'
+          0: "has-background-warning",
+          1: "has-background-info",
         };
 
         let date = 1;
         for (let indexWeeks = 0; indexWeeks < weeksInMonth; indexWeeks++) {
-          const weekRow = document.createElement('tr');
+          const weekRow = document.createElement("tr");
           for (let indexDays = 0; indexDays < 7; indexDays++) {
-            const day = document.createElement('td');
+            const day = document.createElement("td");
             if (
               (indexWeeks == 0 && indexDays < firstDayOfMonth) ||
               date > daysInMonth
             ) {
-              day.textContent = '';
+              day.textContent = "";
             } else {
               if (isToday(today, date, currentMonth, currentYear))
-                day.setAttribute('class', 'has-background-primary');
+                day.setAttribute("class", "has-background-primary");
 
               calculatedSessionDates.forEach((session, index) => {
                 if (isSessionDate(session, date, currentMonth, currentYear))
@@ -188,17 +192,17 @@
             }
             weekRow.appendChild(day);
           }
-          el.querySelector('tbody').appendChild(weekRow);
+          el.querySelector("tbody").appendChild(weekRow);
         }
       };
 
       function addClassName(el, newClassName) {
-        if (!el.hasAttribute('class')) {
-          el.setAttribute('class', newClassName);
+        if (!el.hasAttribute("class")) {
+          el.setAttribute("class", newClassName);
           return;
         }
-        const classNames = [el.getAttribute('class'), newClassName].join(' ');
-        el.setAttribute('class', classNames);
+        const classNames = [el.getAttribute("class"), newClassName].join(" ");
+        el.setAttribute("class", classNames);
       }
 
       renderBody(
@@ -212,25 +216,25 @@
       );
 
       // Build Footer Selector
-      const selectMonth = el.querySelector('tfoot [data-month]');
+      const selectMonth = el.querySelector("tfoot [data-month]");
       months.forEach((month, index) => {
-        const monthOption = document.createElement('option');
-        monthOption.setAttribute('value', index);
+        const monthOption = document.createElement("option");
+        monthOption.setAttribute("value", index);
         monthOption.textContent = month;
         if (months[currentMonth] == month)
-          monthOption.setAttribute('selected', 'selected');
+          monthOption.setAttribute("selected", "selected");
         selectMonth.appendChild(monthOption);
       });
 
-      const selectYears = el.querySelector('tfoot [data-year]');
+      const selectYears = el.querySelector("tfoot [data-year]");
       const selectableYears = [0, 1, 2, 3, 4, 5];
       selectableYears.forEach((year) => {
-        const yearOption = document.createElement('option');
+        const yearOption = document.createElement("option");
         yearOption.textContent = currentYear + year;
         selectYears.appendChild(yearOption);
       });
 
-      selectMonth.addEventListener('change', (e) => {
+      selectMonth.addEventListener("change", (e) => {
         const selectedMonth = e.currentTarget.selectedOptions[0].value;
         const selectedYear = selectYears.selectedOptions[0].value;
         renderHeader(el, months, selectedMonth, selectedYear);
@@ -245,7 +249,7 @@
         );
       });
 
-      selectYears.addEventListener('change', (e) => {
+      selectYears.addEventListener("change", (e) => {
         const selectedMonth = selectMonth.selectedOptions[0].value;
         const selectedYear = e.currentTarget.selectedOptions[0].value;
         renderHeader(el, months, selectedMonth, selectedYear);
