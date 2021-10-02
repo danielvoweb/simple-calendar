@@ -35,7 +35,10 @@ describe("rendering simple calendar", () => {
     });
   });
 
-  it("should display all days in the month", () => {});
+  it("should display all days in the month", () => {
+    cy.get("table.calendar tbody tr td").contains(/^[1-3]?[0-9]$|^$/);
+    cy.get("table.calendar tbody tr td").should("have.length.greaterThan", 30);
+  });
   it("should display the first day on the correct day of the week", () => {});
   it("should display the last day on the correct day of the week", () => {});
   it("should display empty cells for days of the week outside the current month", () => {});
