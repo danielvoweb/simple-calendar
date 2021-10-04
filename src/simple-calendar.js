@@ -1,20 +1,20 @@
 const simpleCalendar = (function () {
   const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   const calculateSessionDates = (session) => {
     const dates = [...Array(session.weeks)];
@@ -38,6 +38,13 @@ const simpleCalendar = (function () {
     return 32 - new Date(date.getFullYear(), date.getMonth(), 32).getDate();
   };
 
+  const getWeeksInMonth = (date) => {
+    const daysInMonth = getDaysInMonth(date);
+    const firstDayOfMonth = getFirstDayOfMonth(date);
+    const daysInWeek = 7;
+    return Math.ceil((daysInMonth + firstDayOfMonth) / daysInWeek);
+  };
+
   const isSessionDate = (sessionDates, date, currentMonth, currentYear) => {
     return sessionDates.includes(
       new Date(currentYear, currentMonth, date, 0, 0).toString()
@@ -53,17 +60,17 @@ const simpleCalendar = (function () {
     const currentMonth = date.getMonth();
     const currentYear = date.getFullYear();
 
-    const currentMonthHeaderTitle = el.querySelector('thead tr th');
+    const currentMonthHeaderTitle = el.querySelector("thead tr th");
     currentMonthHeaderTitle.textContent = `${months[currentMonth]} ${currentYear}`;
   };
 
   const renderBody = (el) => {
-    const body = el.querySelector('tbody');
+    const body = el.querySelector("tbody");
     removeChildren(body);
 
-    const daysHeaderRow = document.createElement('tr');
+    const daysHeaderRow = document.createElement("tr");
     days.forEach((day) => {
-      const daysHeaderColumnHeader = document.createElement('th');
+      const daysHeaderColumnHeader = document.createElement("th");
       daysHeaderColumnHeader.textContent = day;
       daysHeaderRow.appendChild(daysHeaderColumnHeader);
     });
@@ -81,8 +88,9 @@ const simpleCalendar = (function () {
     calculateSessionDates,
     getFirstDayOfMonth,
     getDaysInMonth,
+    getWeeksInMonth,
     isSessionDate,
-    render
+    render,
   };
 })();
 

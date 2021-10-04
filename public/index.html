@@ -54,7 +54,7 @@
       </table>
     </div>
     <script type="text/javascript" src="index.js"></script>
-    <!-- <script>
+    <script>
       // TODO: 1 class per week on a given day for a week number of sessions
       const sessions = [
         {
@@ -140,7 +140,7 @@
         const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
         const daysInMonth =
           32 - new Date(currentMonth, currentYear, 32).getDate();
-        const weeksInMonth = Math.ceil(daysInMonth / 7);
+        const weeksInMonth = Math.ceil((daysInMonth + firstDayOfMonth) / 7);
 
         const isToday = (today, date, currentMonth, currentYear) => {
           return (
@@ -264,6 +264,6 @@
           sessions
         );
       });
-    </script> -->
+    </script>
   </body>
 </html>
